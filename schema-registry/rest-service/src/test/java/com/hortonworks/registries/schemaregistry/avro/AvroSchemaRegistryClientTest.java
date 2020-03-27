@@ -578,6 +578,29 @@ public class AvroSchemaRegistryClientTest {
     }
 
     @Test
+    public void testCheckCompatibility() {
+        Assert.assertEquals(true, true);
+        final String schemaName = "non-exiting-random-schema";
+        final String schema = "{\n" +
+                "  \"type\" : \"record\",\n" +
+                "  \"namespace\" : \"com.hortonworks.registries\",\n" +
+                "  \"name\" : \"trucks\",\n" +
+                "  \"fields\" : [\n" +
+                "    { \"name\" : \"driverId\" , \"type\" : \"int\" },\n" +
+                "    { \"name\" : \"truckId\" , \"type\" : \"int\" }" +
+                "  ]\n" +
+                "}";
+        try {
+            SCHEMA_REGISTRY_CLIENT.checkCompatibility(schemaName, schema);
+            Assert.assertEquals(true, false);
+        } catch (SchemaNotFoundException e) {
+            Assert.assertEquals(true, true);
+        } catch (Exception e) {
+            Assert.assertEquals(true, false);
+        }
+    }
+
+    @Test
     public void testGetSchemaVersionFromStates() throws IOException, SchemaNotFoundException, InvalidSchemaException, IncompatibleSchemaException, SchemaLifecycleException, SchemaBranchAlreadyExistsException {
         SchemaMetadata schemaMetadata = createSchemaMetadata(TEST_NAME_RULE.getMethodName(), SchemaCompatibility.NONE);
         String schemaName = schemaMetadata.getName();
